@@ -1,4 +1,7 @@
 #include "Trie.h"
+
+#include<queue>
+#include<stack>
 Trie::Node::Node(char data = '\0', bool is_finished = false)
     :data(data),is_finished(is_finished),parent(nullptr),children{}{
 }
@@ -172,10 +175,79 @@ Trie::Node* Trie::findLeaf(const std::string &str) const {
 
 // Breadth-first over the node and calling "func" function over each of them
 void Trie::bfs(std::function<void(Node*&)> func) {
+    std::queue<Node*>q;
+    q.push(root);
+    while(!q.empty()) {
+        Node * node = q.front();
+        q.pop();
+        func(node);
+        for(auto& child: node->children) {
+            if(child != nullptr) {
+                q.push(node);
+            }
+        }
+    }
+}
+
+
+// 可以加一个visited布尔数组判断该Node节点是否被访问过。
+// (BONUS), Depth-first over the node and calling "func" function over each of them
+void Trie::dfs(std::function<void(Node*&)> func) {
+    std::stack<Node*>stk;
+    stk.push(root);
+    while(!stk.empty()) {
+        Node* node = stk.top();
+        stk.pop();
+        func(node);
+        for(auto& child : node->children) {
+            if(child != nullptr) {
+                stk.push(child);
+            }
+        }
+    }
+}
+
+// Output operator
+std::ostream& operator<<(std::ostream& os, const Trie& trie) {
+    
+}
+
+// Input operator
+std::istream& operator>>(std::istream& is, Trie& trie) {
 
 }
 
-// (BONUS), Depth-first over the node and calling "func" function over each of them
-void Trie::dfs(std::function<void(Node*&)> func) {
-    
+// Creates a new Trie containing all unique words from both operands
+Trie Trie::operator+(const Trie& other) const {
+
+}
+
+// Adds all words from the right-hand operand into the left-hand Trie
+Trie& Trie::operator+=(const Trie& other) {
+
+}
+
+// Creates a new Trie containing words from the first Trie not in the second
+Trie Trie::operator-(const Trie& other) const {
+
+}
+
+// Removes words from the left-hand Trie found in the right-hand Trie
+Trie& Trie::operator-=(const Trie& other) {
+
+}
+
+// Can be used to check existence or perform other string operations
+bool Trie::operator()(const std::string& query) const {
+
+} 
+
+// Check if two Tries have exactly the same words
+bool Trie::operator==(const Trie& other) const {
+
+}
+
+// Check if two Tries differ in any word
+bool Trie::operator!=(const Trie& other) const {
+
 }

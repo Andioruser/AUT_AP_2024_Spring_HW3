@@ -45,7 +45,7 @@ public:
     // Traversal and Utility
     void bfs(std::function<void(Node*&)> func); // Breadth-first over the node and calling "func" function over each of them
     void dfs(std::function<void(Node*&)> func); // (BONUS), Depth-first over the node and calling "func" function over each of them
-
+    
     // I/O operators
     friend std::ostream& operator<<(std::ostream& os, const Trie& trie); // Output operator
     friend std::istream& operator>>(std::istream& is, Trie& trie); // Input operator
@@ -58,7 +58,6 @@ public:
     bool operator()(const std::string& query) const; // Can be used to check existence or perform other string operations
     bool operator==(const Trie& other) const; // Check if two Tries have exactly the same words
     bool operator!=(const Trie& other) const; // Check if two Tries differ in any word
-
 private:
     Node* root;
 };
