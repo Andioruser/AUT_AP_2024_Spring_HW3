@@ -72,6 +72,7 @@ void Trie::insert(const std::string& str) {
             }
         }
         if(!is_found) {
+            //将该节点加入parent的children
             Node* new_node = new Node();
             new_node->data = str[str_index++];
             new_node->is_finished = str_index == str.size() ? true : false;
@@ -129,5 +130,52 @@ bool Trie::startsWith(const std::string& prefix) const {
 
 // Remove a word from the Trie, consider removing the trace if needed.
 void Trie::remove(const std::string& str) {
+   Node * leaf = findLeaf(str);
+   if(leaf == nullptr) {
+        return;
+   }
+   std::size_t child_num = 0;
+   while(leaf->parent != nullptr) {
+        for(auto& child : leaf->parent->children) {
+            if(child == leaf) {
+                child = nullptr;
+            } 
+            if(child != nullptr)child_num++;
+        }
+        if(child_num >= 1) {
+            delete leaf;
+            leaf = leaf->parent;
+        }
+   }
+}
+Trie::Node* Trie::findLeaf(const std::string &str) const {
+    int str_index = 0;
+    Trie::Node * node = root;
+    std::size_t str_index = 0;
+    while(node != nullptr && str_index < str.size()) {
+        bool is_found = false;
+        for(const auto& child : node->children) {
+            if(node->data == str[str_index]) {
+                node = child;
+                str_index++;
+                if( str_index == str.size() - 1 && node->is_finished ) {
+                    return node;
+                }
+                break;
+            }
+        }
+    }
+    return nullptr;
+}
+
+// Traversal and Utility
+
+// Breadth-first over the node and calling "func" function over each of them
+void Trie::bfs(std::function<void(Node*&)> func) {
+
+}
+
+// (BONUS), Depth-first over the node and calling "func" function over each of them
+void Trie::dfs(std::function<void(Node*&)> func) {
     
 }
