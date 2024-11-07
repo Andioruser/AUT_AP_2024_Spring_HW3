@@ -13,7 +13,9 @@ public:
     public:
         Node(char data = '\0', bool is_finished = false);
         ~Node(); // To manage deletion of children nodes
-
+        void deleteNode(Node* root);
+        void createNode(Node* root, Node* other_root);
+        Node& operator=(const Node& node);
         Node* parent; // Pointer to the parent node, parent of the root is "nullptr"
         std::array<Node*, 26> children; // Array of 26 Node pointers, covering English alphabet
         char data; // data for root node is "\0"
@@ -38,7 +40,7 @@ public:
     bool search(const std::string& query) const;
     bool startsWith(const std::string& prefix) const; // Check if there is any word in the trie that starts with the given prefix
     void remove(const std::string& str); // Remove a word from the Trie, consider removing the trace if needed.
-
+    
     // Traversal and Utility
     void bfs(std::function<void(Node*&)> func); // Breadth-first over the node and calling "func" function over each of them
     void dfs(std::function<void(Node*&)> func); // (BONUS), Depth-first over the node and calling "func" function over each of them
