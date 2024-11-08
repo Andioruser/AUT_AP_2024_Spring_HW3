@@ -207,6 +207,21 @@ void Trie::dfs(std::function<void(Node*&)> func) {
     }
 }
 
+void Trie::getAllWords(Node* node, std::string currentWord,std::vector<std::string>result) const{
+    if(node->is_finished) {
+        result.push_back(currentWord);
+    }
+    for(const auto& child : node->children) {
+        getAllWords(child,currentWord + child->data, result);
+    }
+}
+
+std::vector<std::string> Trie::getAllWords() const {
+    std::vector<std::string> result;
+    getAllWords(root, "", result);  
+    return result;
+}
+
 // Output operator
 std::ostream& operator<<(std::ostream& os, const Trie& trie) {
     
@@ -219,7 +234,21 @@ std::istream& operator>>(std::istream& is, Trie& trie) {
 
 // Creates a new Trie containing all unique words from both operands
 Trie Trie::operator+(const Trie& other) const {
+    std::vector<std::string>lwords  = this->getAllWords();
+    std::vector<std::string>rwords = other.getAllWords();
+    std::vector<std::string> result;
 
+    std::sort(lwords.begin(), lwords.end());
+    std::sort(rwords.begin(), rwords.end());
+
+    std::set_intersection(lwords.begin(), lwords.end(), rwords.begin(), rwords.end(), std::back_inserter(result));
+
+    Trie * trie = new Trie();
+
+    for(const auto& str : result) {
+        trie->insert(str);
+    }
+    return *trie;
 }
 
 // Adds all words from the right-hand operand into the left-hand Trie
@@ -239,15 +268,25 @@ Trie& Trie::operator-=(const Trie& other) {
 
 // Can be used to check existence or perform other string operations
 bool Trie::operator()(const std::string& query) const {
-
+    return search(query);
 } 
 
 // Check if two Tries have exactly the same words
 bool Trie::operator==(const Trie& other) const {
+    std::vector<std::string>lwords  = this->getAllWords();
+    std::vector<std::string>rwords = other.getAllWords();
+    std::vector<std::string> result;
 
+    std::sort(lwords.begin(), lwords.end());
+    std::sort(rwords.begin(), rwords.end());
 }
 
 // Check if two Tries differ in any word
 bool Trie::operator!=(const Trie& other) const {
+    std::vector<std::string>lwords  = this->getAllWords();
+    std::vector<std::string>rwords = other.getAllWords();
+    std::vector<std::string> result;
 
+    std::sort(lwords.begin(), lwords.end());
+    std::sort(rwords.begin(), rwords.end());
 }

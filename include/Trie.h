@@ -6,6 +6,7 @@
 #include <initializer_list>
 #include <functional>
 #include <iostream>
+#include <vector>
 
 class Trie {
 public:
@@ -40,6 +41,8 @@ public:
     bool search(const std::string& query) const;
     bool startsWith(const std::string& prefix) const; // Check if there is any word in the trie that starts with the given prefix
     void remove(const std::string& str); // Remove a word from the Trie, consider removing the trace if needed.
+    void getAllWords(Node* node, std::string currentWord,std::vector<std::string>result) const; 
+    std::vector<std::string> getAllWords() const;
     Trie::Node* findLeaf(const std::string& str) const;
 
     // Traversal and Utility
