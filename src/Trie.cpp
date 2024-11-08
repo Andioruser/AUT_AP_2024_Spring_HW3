@@ -54,10 +54,16 @@ Trie::~Trie() {
 }
 
 Trie& Trie::operator=(const Trie& other) {
-    root = other.root;
+    if(this == &other) return *this;
+    delete root;
+    root = new Node();
+    root->createNode(root,other.root);
 }
 Trie& Trie::operator=(Trie&& other) {
-    root = std::move(other.root);
+    if(this == &other) return *this;
+    delete root;
+    root = other.root;
+    other.root = nullptr;
 }
 
 void Trie::insert(const std::string& str) {

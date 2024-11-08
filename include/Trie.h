@@ -16,7 +16,6 @@ public:
         ~Node(); // To manage deletion of children nodes
         void deleteNode(Node* root);
         void createNode(Node* root, Node* other_root);
-        Node& operator=(const Node& node);
         Node* parent; // Pointer to the parent node, parent of the root is "nullptr"
         std::array<Node*, 26> children; // Array of 26 Node pointers, covering English alphabet
         char data; // data for root node is "\0"
