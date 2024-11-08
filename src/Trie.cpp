@@ -71,6 +71,7 @@ void Trie::insert(const std::string& str) {
                 node = child;
                 str_index++;
                 is_found = true;
+                if(str_index = str.size() && node->is_finished)return;
                 break;
             }
         }
@@ -224,12 +225,18 @@ std::vector<std::string> Trie::getAllWords() const {
 
 // Output operator
 std::ostream& operator<<(std::ostream& os, const Trie& trie) {
-    
+   std::vector<std::string>lwords  = trie.getAllWords();
+   for(const auto&str : lwords) {
+        os<<str<<",";
+   }
+   os<<std::endl;
 }
 
 // Input operator
 std::istream& operator>>(std::istream& is, Trie& trie) {
-
+    std::string str;
+    is>>str;
+    trie.insert(str);
 }
 
 // Creates a new Trie containing all unique words from both operands
@@ -241,7 +248,7 @@ Trie Trie::operator+(const Trie& other) const {
     std::sort(lwords.begin(), lwords.end());
     std::sort(rwords.begin(), rwords.end());
 
-    std::set_intersection(lwords.begin(), lwords.end(), rwords.begin(), rwords.end(), std::back_inserter(result));
+    std::set_union(lwords.begin(), lwords.end(), rwords.begin(), rwords.end(), std::back_inserter(result));
 
     Trie * trie = new Trie();
 
@@ -253,17 +260,35 @@ Trie Trie::operator+(const Trie& other) const {
 
 // Adds all words from the right-hand operand into the left-hand Trie
 Trie& Trie::operator+=(const Trie& other) {
-
+    Trie trie = (*this) + other;
+    return trie;
 }
 
 // Creates a new Trie containing words from the first Trie not in the second
 Trie Trie::operator-(const Trie& other) const {
+    std::vector<std::string>lwords  = this->getAllWords();
+    std::vector<std::string>rwords = other.getAllWords();
+    std::vector<std::string> result;
 
+    std::sort(lwords.begin(), lwords.end());
+    std::sort(rwords.begin(), rwords.end());
+
+    // 计算差集
+    std::set_difference(lwords.begin(), lwords.end(), rwords.begin(), rwords.end(),
+                        std::back_inserter(result));
+
+    Trie * trie = new Trie();
+
+    for(const auto& str : result) {
+        trie->insert(str);
+    }
+    return *trie;
 }
 
 // Removes words from the left-hand Trie found in the right-hand Trie
 Trie& Trie::operator-=(const Trie& other) {
-
+    Trie trie = (*this) - other;
+    return trie;
 }
 
 // Can be used to check existence or perform other string operations
@@ -279,6 +304,15 @@ bool Trie::operator==(const Trie& other) const {
 
     std::sort(lwords.begin(), lwords.end());
     std::sort(rwords.begin(), rwords.end());
+    if(lwords.size() != rwords.size()) {
+        return false;
+    }
+    for(std::size_t i = 0; i < lwords.size(); ++i) {
+        if(lwords[i] != rwords[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 // Check if two Tries differ in any word
@@ -289,4 +323,7 @@ bool Trie::operator!=(const Trie& other) const {
 
     std::sort(lwords.begin(), lwords.end());
     std::sort(rwords.begin(), rwords.end());
+
+    std::set_intersection(lwords.begin(), lwords.end(), rwords.begin(), rwords.end(), std::back_inserter(result));
+    return result.size() == 0 ? true : false;
 }
